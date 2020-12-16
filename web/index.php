@@ -1,22 +1,17 @@
 <?php
-
 /**
- * @file
- * The PHP page that serves all page requests on a Drupal installation.
+ * Front to the WordPress application. This file doesn't do anything, but loads
+ * wp-blog-header.php which does and tells WordPress to load the theme.
  *
- * All Drupal code is released under the GNU General Public License.
- * See COPYRIGHT.txt and LICENSE.txt files in the "core" directory.
+ * @package WordPress
  */
 
-use Drupal\Core\DrupalKernel;
-use Symfony\Component\HttpFoundation\Request;
+/**
+ * Tells WordPress to load the WordPress theme and output it.
+ *
+ * @var bool
+ */
+define( 'WP_USE_THEMES', true );
 
-$autoloader = require_once 'autoload.php';
-
-$kernel = new DrupalKernel('prod', $autoloader);
-
-$request = Request::createFromGlobals();
-$response = $kernel->handle($request);
-$response->send();
-
-$kernel->terminate($request, $response);
+/** Loads the WordPress Environment and Template */
+require __DIR__ . '/wp-blog-header.php';
