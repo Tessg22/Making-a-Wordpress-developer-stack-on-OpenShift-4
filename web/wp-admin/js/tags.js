@@ -1,26 +1,23 @@
+/* global ajaxurl, wpAjax, tagsl10n, showNotice, validateForm */
 /**
- * Contains logic for deleting and adding tags.
+ * Contains logic for both adding and deleting tags. For deleting tags it makes a request
+ * to the server to delete the tag. For adding tags it makes a request to the server to
+ * add the tag.
  *
- * For deleting tags it makes a request to the server to delete the tag.
- * For adding tags it makes a request to the server to add the tag.
- *
- * @output wp-admin/js/tags.js
+ * @summary Contains logic for deleting and adding tags
  */
-
- /* global ajaxurl, wpAjax, showNotice, validateForm */
 
 jQuery(document).ready(function($) {
 
-	var addingTerm = false;
-
 	/**
-	 * Adds an event handler to the delete term link on the term overview page.
+	 * @summary Adds an event handler to the delete term link on the term overview page.
 	 *
+	 * Adds an event handler to the delete term link on the term overview page.
 	 * Cancels default event handling and event bubbling.
 	 *
 	 * @since 2.8.0
 	 *
-	 * @return {boolean} Always returns false to cancel the default event handling.
+	 * @returns boolean Always returns false to cancel the default event handling.
 	 */
 	$( '#the-list' ).on( 'click', '.delete-tag', function() {
 		var t = $(this), tr = t.parents('tr'), r = true, data;
@@ -32,12 +29,12 @@ jQuery(document).ready(function($) {
 			data = t.attr('href').replace(/[^?]*\?/, '').replace(/action=delete/, 'action=delete-tag');
 
 			/**
-			 * Makes a request to the server to delete the term that corresponds to the
-			 * delete term button.
+			 * @summary Makes a request to the server to delete the term that
+			 * corresponds to the delete term button.
 			 *
 			 * @param {string} r The response from the server.
 			 *
-			 * @return {void}
+			 * @returns {void}
 			 */
 			$.post(ajaxurl, data, function(r){
 				if ( '1' == r ) {
@@ -45,21 +42,21 @@ jQuery(document).ready(function($) {
 					tr.fadeOut('normal', function(){ tr.remove(); });
 
 					/**
-					 * Removes the term from the parent box and the tag cloud.
+					 * @summary Remove the term from the parent box and the tag cloud
 					 *
-					 * `data.match(/tag_ID=(\d+)/)[1]` matches the term ID from the data variable.
-					 * This term ID is then used to select the relevant HTML elements:
+					 * `data.match(/tag_ID=(\d+)/)[1]` matches the term id from the data variable.
+					 * This term id is then used to select the relevant HTML elements:
 					 * The parent box and the tag cloud.
 					 */
 					$('select#parent option[value="' + data.match(/tag_ID=(\d+)/)[1] + '"]').remove();
 					$('a.tag-link-' + data.match(/tag_ID=(\d+)/)[1]).remove();
 
 				} else if ( '-1' == r ) {
-					$('#ajax-response').empty().append('<div class="error"><p>' + wp.i18n.__( 'Sorry, you are not allowed to do that.' ) + '</p></div>');
+					$('#ajax-response').empty().append('<div class="error"><p>' + tagsl10n.noPerm + '</p></div>');
 					tr.children().css('backgroundColor', '');
 
 				} else {
-					$('#ajax-response').empty().append('<div class="error"><p>' + wp.i18n.__( 'Something went wrong.' ) + '</p></div>');
+					$('#ajax-response').empty().append('<div class="error"><p>' + tagsl10n.broken + '</p></div>');
 					tr.children().css('backgroundColor', '');
 				}
 			});
@@ -75,7 +72,7 @@ jQuery(document).ready(function($) {
 	 *
 	 * @since 4.8.0
 	 *
-	 * @return {void}
+	 * @returns {void}
 	 */
 	$( '#edittag' ).on( 'click', '.delete', function( e ) {
 		if ( 'undefined' === typeof showNotice ) {
@@ -90,13 +87,13 @@ jQuery(document).ready(function($) {
 	});
 
 	/**
-	 * Adds an event handler to the form submit on the term overview page.
+	 * @summary Adds an event handler tot he form submit on the term overview page.
 	 *
 	 * Cancels default event handling and event bubbling.
 	 *
 	 * @since 2.8.0
 	 *
-	 * @return {boolean} Always returns false to cancel the default event handling.
+	 * @returns boolean Always returns false to cancel the default event handling.
 	 */
 	$('#submit').click(function(){
 		var form = $(this).parents('form');
@@ -104,26 +101,15 @@ jQuery(document).ready(function($) {
 		if ( ! validateForm( form ) )
 			return false;
 
-		if ( addingTerm ) {
-			// If we're adding a term, noop the button to avoid duplicate requests.
-			return false;
-		}
-
-		addingTerm = true;
-		form.find( '.submit .spinner' ).addClass( 'is-active' );
-
 		/**
 		 * Does a request to the server to add a new term to the database
 		 *
 		 * @param {string} r The response from the server.
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		$.post(ajaxurl, $('#addtag').serialize(), function(r){
 			var res, parent, term, indent, i;
-
-			addingTerm = false;
-			form.find( '.submit .spinner' ).removeClass( 'is-active' );
 
 			$('#ajax-response').empty();
 			res = wpAjax.parseAjaxResponse( r, 'ajax-response' );
@@ -132,14 +118,10 @@ jQuery(document).ready(function($) {
 
 			parent = form.find( 'select#parent' ).val();
 
-			// If the parent exists on this page, insert it below. Else insert it at the top of the list.
-			if ( parent > 0 && $('#tag-' + parent ).length > 0 ) {
-				// As the parent exists, insert the version with - - - prefixed.
-				$( '.tags #tag-' + parent ).after( res.responses[0].supplemental.noparents );
-			} else {
-				// As the parent is not visible, insert the version with Parent - Child - ThisTerm.
-				$( '.tags' ).prepend( res.responses[0].supplemental.parents );
-			}
+			if ( parent > 0 && $('#tag-' + parent ).length > 0 ) // If the parent exists on this page, insert it below. Else insert it at the top of the list.
+				$( '.tags #tag-' + parent ).after( res.responses[0].supplemental.noparents ); // As the parent exists, Insert the version with - - - prefixed
+			else
+				$( '.tags' ).prepend( res.responses[0].supplemental.parents ); // As the parent is not visible, Insert the version with Parent - Child - ThisTerm
 
 			$('.tags .no-items').remove();
 
@@ -147,7 +129,7 @@ jQuery(document).ready(function($) {
 				// Parents field exists, Add new term to the list.
 				term = res.responses[1].supplemental;
 
-				// Create an indent for the Parent field.
+				// Create an indent for the Parent field
 				indent = '';
 				for ( i = 0; i < res.responses[1].position; i++ )
 					indent += '&nbsp;&nbsp;&nbsp;';

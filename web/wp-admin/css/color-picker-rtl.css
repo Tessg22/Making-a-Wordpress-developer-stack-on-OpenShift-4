@@ -1,8 +1,5 @@
-/*! This file is auto-generated */
-/* rtl:ignore */
 .wp-color-picker {
 	width: 80px;
-	direction: ltr;
 }
 
 .wp-picker-container .hidden {
@@ -11,7 +8,7 @@
 
 /* Needs higher specificiity. */
 .wp-picker-container .wp-color-result.button {
-	min-height: 30px;
+	height: 24px;
 	margin: 0 0px 6px 6px;
 	padding: 0 30px 0 0;
 	font-size: 11px;
@@ -23,7 +20,7 @@
 	border-right: 1px solid #ccc;
 	color: #555;
 	display: block;
-	line-height: 2.54545455; /* 28px */
+	line-height: 22px;
 	padding: 0 6px;
 	text-align: center;
 }
@@ -42,17 +39,18 @@
 	border-right: 1px solid #999;
 }
 
-.wp-picker-container {
+.wp-picker-containers {
 	display: inline-block;
 }
 
 .wp-color-result:focus {
 	border-color: #5b9dd9;
-	box-shadow: 0 0 3px rgba(0, 115, 170, 0.8);
+	box-shadow: 0 0 3px rgba( 0, 115, 170, .8 );
 }
 
 .wp-color-result:active {
 	/* See Trac ticket #39662 */
+	-webkit-transform: none !important;
 	transform: none !important;
 }
 
@@ -71,14 +69,9 @@
 	margin: 0 !important;
 }
 
-.wp-picker-input-wrap .button.wp-picker-default,
-.wp-picker-input-wrap .button.wp-picker-clear,
-.wp-customizer .wp-picker-input-wrap .button.wp-picker-default,
-.wp-customizer .wp-picker-input-wrap .button.wp-picker-clear {
-	margin-right: 6px;
-	padding: 0 8px;
-	line-height: 2.54545455; /* 28px */
-	min-height: 30px;
+.wp-picker-input-wrap .button,
+.wp-customizer .wp-picker-input-wrap .button {
+ 	margin-right: 6px;
 }
 
 .wp-picker-container .iris-square-slider .ui-slider-handle:focus {
@@ -92,14 +85,12 @@
 }
 
 .wp-picker-container input[type="text"].wp-color-picker {
-	width: 4rem;
+	width: 65px;
 	font-size: 12px;
 	font-family: monospace;
-	line-height: 2.33333333; /* 28px */
+	line-height: 16px;
 	margin: 0;
-	padding: 0 5px;
 	vertical-align: top;
-	min-height: 30px;
 }
 
 .wp-color-picker::-webkit-input-placeholder {
@@ -123,52 +114,40 @@
 
 .iris-picker .ui-square-handle:focus,
 .iris-picker .iris-strip .ui-slider-handle:focus {
-	border-color: #007cba;
-	border-style: solid;
-	box-shadow: 0 0 0 1px #007cba;
-	outline: 2px solid transparent;
+	box-shadow:
+		0 0 0 1px #5b9dd9,
+		0 0 2px 1px rgba(30, 140, 190, .8);
 }
 
 .iris-picker .iris-palette:focus {
-	box-shadow: 0 0 0 2px #007cba;
+	box-shadow:
+		inset 0 0 5px rgba(0,0,0,.4),
+		0 0 0 1px #5b9dd9,
+		0 0 2px 1px rgba(30, 140, 190, .8);
 }
 
-@media screen and (max-width: 782px) {
+@media screen and ( max-width: 782px ) {
 	.wp-picker-container input[type="text"].wp-color-picker {
-		width: 5rem;
+		width: 80px;
+		padding: 6px 5px 5px;
 		font-size: 16px;
-		line-height: 1.875; /* 30px */
-		min-height: 32px;
+		line-height: 18px;
 	}
 
 	.wp-customizer .wp-picker-container input[type="text"].wp-color-picker {
-		padding: 0 5px;
-	}
-
-	.wp-picker-input-wrap .button.wp-picker-default,
-	.wp-picker-input-wrap .button.wp-picker-clear {
-		padding: 0 8px;
-		line-height: 2.14285714; /* 30px */
-		min-height: 32px;
-	}
-
-	.wp-customizer .wp-picker-input-wrap .button.wp-picker-default,
-	.wp-customizer .wp-picker-input-wrap .button.wp-picker-clear {
-		padding: 0 8px;
-		font-size: 14px;
-		line-height: 2.14285714; /* 30px */
-		min-height: 32px;
+		padding: 5px 5px 4px;
 	}
 
 	.wp-picker-container .wp-color-result.button {
+		height: auto;
 		padding: 0 40px 0 0;
 		font-size: 14px;
-		line-height: 2.14285714; /* 30px */
+		line-height: 29px;
 	}
 
 	.wp-customizer .wp-picker-container .wp-color-result.button {
-		font-size: 14px;
-		line-height: 2.14285714; /* 30px */
+		font-size: 13px;
+		line-height: 26px;
 	}
 
 	.wp-picker-container .wp-color-result-text {
@@ -179,5 +158,16 @@
 
 	.wp-customizer .wp-picker-container .wp-color-result-text {
 		padding: 0 10px;
+	}
+}
+
+@media screen and ( max-width: 640px ) {
+	.wp-customizer .wp-picker-container .wp-color-result.button {
+		font-size: 14px;
+		line-height: 29px;
+	}
+
+	.wp-customizer .wp-picker-container input[type="text"].wp-color-picker {
+		padding: 6px 5px;
 	}
 }

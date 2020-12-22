@@ -1,4 +1,3 @@
-/*! This file is auto-generated */
 /*------------------------------------------------------------------------------
   16.0 - Themes
 ------------------------------------------------------------------------------*/
@@ -35,6 +34,9 @@ body.js .theme-browser.search-loading {
 	right: 20px;
 	margin: 0;
 	width: 280px;
+	font-size: 16px;
+	font-weight: 300;
+	line-height: 1.5;
 }
 
 /* Position admin messages */
@@ -58,8 +60,13 @@ body.js .theme-browser.search-loading {
 	position: relative;
 	width: 30.6%;
 	border: 1px solid #ddd;
-	box-shadow: 0 1px 1px -1px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 1px 1px -1px rgba(0,0,0,0.1);
 	box-sizing: border-box;
+}
+
+.ie8 .theme-browser .theme {
+	width: 30%;
+	margin: 0 0 4% 3%;
 }
 
 .theme-browser .theme:nth-child(3n) {
@@ -77,12 +84,12 @@ body.js .theme-browser.search-loading {
 	height: 18px;
 	margin: 0;
 	padding: 15px;
-	box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1);
+	box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	background: #fff;
-	background: rgba(255, 255, 255, 0.65);
+	background: rgba(255,255,255,0.65);
 }
 
 /* Activate and Customize buttons, shown on hover and focus */
@@ -92,7 +99,7 @@ body.js .theme-browser.search-loading {
 	transition: opacity 0.1s ease-in-out;
 	height: auto;
 	background: rgba(244, 244, 244, 0.7);
-	border-right: 1px solid rgba(0, 0, 0, 0.05);
+	border-right: 1px solid rgba(0,0,0,0.05);
 }
 
 .theme-browser .theme:hover .theme-actions,
@@ -158,10 +165,10 @@ body.js .theme-browser.search-loading {
 	left: 20%;
 	right: 20%;
 	background: #23282d;
-	background: rgba(0, 0, 0, 0.7);
+	background: rgba(0,0,0,0.7);
 	color: #fff;
 	font-size: 15px;
-	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+	text-shadow: 0 1px 0 rgba(0,0,0,0.6);
 	-webkit-font-smoothing: antialiased;
 	font-weight: 600;
 	padding: 15px 12px;
@@ -172,7 +179,7 @@ body.js .theme-browser.search-loading {
 
 .theme-browser .theme:focus {
 	border-color: #5b9dd9;
-	box-shadow: 0 0 2px rgba(30, 140, 190, 0.8);
+	box-shadow: 0 0 2px rgba( 30, 140, 190, 0.8 );
 }
 
 .theme-browser .theme:focus .more-details {
@@ -198,7 +205,7 @@ body.js .theme-browser.search-loading {
 	color: #fff;
 	padding-left: 110px;
 	font-weight: 300;
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
 }
 
 .theme-browser .customize-control .theme.active .theme-name {
@@ -210,7 +217,7 @@ body.js .theme-browser.search-loading {
 }
 
 .theme-browser .theme.active .theme-actions {
-	background: rgba(49, 49, 49, 0.7);
+	background: rgba(49,49,49,0.7);
 	border-right: none;
 	opacity: 1;
 }
@@ -223,10 +230,11 @@ body.js .theme-browser.search-loading {
 .theme-browser .theme .theme-actions {
 	position: absolute;
 	top: 50%;
+	-webkit-transform: translateY(-50%);
 	transform: translateY(-50%);
 	left: 0;
-	padding: 9px 15px;
-	box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1);
+	padding: 10px 15px;
+	box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
 }
 
 .theme-browser .theme.active .theme-actions .button-primary {
@@ -250,6 +258,7 @@ body.js .theme-browser.search-loading {
 
 .theme-browser .theme.display-author .theme-author a {
 	color: inherit;
+	text-decoration: none;
 }
 
 /**
@@ -304,7 +313,7 @@ body.js .theme-browser.search-loading {
 	text-indent: -4px;
 	padding: 0;
 	text-shadow: none;
-	z-index: 4;
+	z-index:4;
 }
 
 .rtl .theme-browser .theme.add-new-theme span:after {
@@ -359,7 +368,7 @@ body.js .theme-browser.search-loading {
 	top: 0;
 	bottom: 0;
 	background: #f1f1f1;
-	background: rgba(238, 238, 238, 0.9);
+	background: rgba( 238, 238, 238, 0.9 );
 	z-index: 10000; /* Over WP Pointers. */
 }
 
@@ -430,8 +439,8 @@ body.js .theme-browser.search-loading {
 .theme-overlay .theme-header .close:focus,
 .theme-overlay .theme-header .right:focus,
 .theme-overlay .theme-header .left:focus {
-	box-shadow: none;
-	outline: none;
+    box-shadow: none;
+    outline: none;
 }
 
 .theme-overlay .theme-header .left.disabled,
@@ -499,6 +508,10 @@ body.folded .theme-browser ~ .theme-overlay .theme-wrap {
 	border-top: 1px solid #eee;
 }
 
+.ie8 .theme-overlay .theme-actions {
+	border: 1px solid #eee;
+}
+
 .theme-overlay .theme-actions a {
 	margin-left: 5px;
 	margin-bottom: 5px;
@@ -561,7 +574,7 @@ body.folded .theme-browser ~ .theme-overlay .theme-wrap {
 	box-sizing: border-box;
 	overflow: hidden;
 	position: relative;
-	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
 }
 
 .theme-overlay .screenshot:after {
@@ -679,21 +692,8 @@ body.folded .theme-browser ~ .theme-overlay .theme-wrap {
 	line-height: inherit;
 }
 
-.theme-overlay .toggle-auto-update {
-	/* Better align spin icon and text. */
-	display: inline-flex;
-	align-items: center;
-	/* Prevents content after the auto-update toggler from jumping down and up. */
-	min-height: 20px; /* Same height as the spinning dashicon. */
-	vertical-align: top;
-}
-
-.theme-overlay .theme-autoupdate .toggle-auto-update {
+.theme-overlay .theme-author a {
 	text-decoration: none;
-}
-
-.theme-overlay .theme-autoupdate .toggle-auto-update .label {
-	text-decoration: underline;
 }
 
 .theme-overlay .theme-description {
@@ -730,7 +730,7 @@ body.folded .theme-browser ~ .theme-overlay .theme-wrap {
 }
 
 .theme-overlay .parent-theme strong {
-	font-weight: 600;
+	font-weight: 700;
 }
 
 /**
@@ -827,7 +827,7 @@ body.folded .theme-browser ~ .theme-overlay .theme-wrap {
 }
 
 /* Admin menu is folded */
-@media only screen and (max-width: 960px) {
+@media only screen and (max-width: 900px) {
 	.theme-overlay .theme-wrap {
 		right: 65px;
 	}
@@ -899,15 +899,6 @@ body.folded .theme-browser ~ .theme-overlay .theme-wrap {
 	.theme-browser .theme:nth-child(2n),
 	.theme-browser .theme:nth-child(3n) {
 		margin-left: 0;
-	}
-
-	.theme-overlay .theme-about {
-		bottom: 105px;
-	}
-
-	.theme-overlay .theme-actions {
-		padding-right: 4%;
-		padding-left: 4%;
 	}
 }
 
@@ -996,15 +987,10 @@ body.folded .theme-browser ~ .theme-overlay .theme-wrap {
   16.2 - Install Themes
 ------------------------------------------------------------------------------*/
 
-.update-php .wrap {
-	max-width: 40rem;
-}
-
 /* Already installed theme */
 .theme-browser .theme .theme-installed {
 	background: #0073aa;
 }
-
 .theme-browser .theme .notice-success p:before {
 	color: #79ba49;
 	content: "\f147";
@@ -1016,7 +1002,7 @@ body.folded .theme-browser ~ .theme-overlay .theme-wrap {
 }
 
 .theme-install.updated-message:before {
-	content: "";
+	content: '';
 }
 
 .theme-install-php .wp-filter {
@@ -1047,7 +1033,10 @@ body.folded .theme-browser ~ .theme-overlay .theme-wrap {
 	overflow: hidden;
 	position: relative;
 	top: 10px;
-	text-align: center;
+}
+
+.upload-plugin-wrap {
+	display: none;
 }
 
 .show-upload-view .upload-theme,
@@ -1060,19 +1049,11 @@ body.folded .theme-browser ~ .theme-overlay .theme-wrap {
 .upload-theme .wp-upload-form,
 .upload-plugin .wp-upload-form {
 	background: #fafafa;
-	border: 1px solid #ccd0d4;
+	border: 1px solid #e5e5e5;
 	padding: 30px;
 	margin: 30px auto;
-	display: inline-flex;
-	justify-content: space-between;
-	align-items: center;
+	max-width: 380px;
 }
-
-.upload-theme .wp-upload-form input[type="file"],
-.upload-plugin .wp-upload-form input[type="file"] {
-	margin-left: 10px;
-}
-
 .upload-theme .install-help,
 .upload-plugin .install-help {
 	color: #555d66; /* #f1f1f1 background */
@@ -1111,11 +1092,12 @@ p.no-themes-local {
 	.upload-theme .install-help {
 		font-size: 15px;
 		padding: 20px 0 0;
+		text-align: right;
 	}
 }
 
 .theme-details .theme-rating {
-	line-height: 1.9;
+	line-height: 23px;
 }
 
 .theme-details .star-rating {
@@ -1130,44 +1112,7 @@ p.no-themes-local {
 
 .theme-details .no-rating {
 	display: block;
-	line-height: 1.9;
-}
-
-.update-from-upload-comparison {
-	border-top: 1px solid #ddd;
-	border-bottom: 1px solid #ddd;
-	text-align: right;
-	margin: 1rem 0 1.4rem;
-	border-collapse: collapse;
-	width: 100%;
-}
-
-.update-from-upload-comparison tr:last-child td {
-	height: 1.4rem;
-    vertical-align: top;
-}
-
-.update-from-upload-comparison tr:first-child th {
-	font-weight: bold;
-	height: 1.4rem;
-    vertical-align: bottom;
-}
-
-.update-from-upload-comparison td.name-label {
-	text-align: left;
-}
-
-.update-from-upload-comparison td,
-.update-from-upload-comparison th {
-	padding: 0.4rem 1.4rem;
-}
-
-.update-from-upload-comparison td.warning {
-	color: #a00;
-}
-
-.update-from-upload-actions {
-	margin-top: 1.4rem;
+	line-height: 20px;
 }
 
 /*------------------------------------------------------------------------------
@@ -1222,13 +1167,13 @@ div#custom-background-image img {
 .background-position-control input[type="radio"]:checked ~ .button {
 	background: #eee;
 	border-color: #999;
-	box-shadow: inset 0 2px 5px -3px rgba(0, 0, 0, 0.5);
+	box-shadow: inset 0 2px 5px -3px rgba( 0, 0, 0, .5 );
 	z-index: 1;
 }
 
 .background-position-control input[type="radio"]:focus ~ .button {
 	border-color: #5b9dd9;
-	box-shadow: inset 0 2px 5px -3px rgba(0, 0, 0, 0.5), 0 0 3px rgba(0, 115, 170, 0.8);
+	box-shadow: inset 0 2px 5px -3px rgba( 0, 0, 0, .5 ), 0 0 3px rgba( 0, 115, 170, .8 );
 	color: #23282d;
 }
 
@@ -1237,7 +1182,7 @@ div#custom-background-image img {
 	display: inline-block;
 	line-height: 1;
 	text-align: center;
-	transition: background-color .1s ease-in;
+	transition: background-color .1s ease-in 0;
 }
 
 .background-position-control .background-position-center-icon {
@@ -1269,7 +1214,7 @@ div#custom-background-image img {
 	box-shadow: none;
 	/* Following properties are overridden by buttons responsive styles (see: wp-includes/css/buttons.css). */
 	height: 40px !important;
-	line-height: 2.9 !important;
+	line-height: 37px !important;
 	margin: 0 0 0 -1px !important;
 	padding: 0 10px 1px !important;
 	position: relative;
@@ -1294,6 +1239,7 @@ div#custom-background-image img {
 }
 
 .background-position-control .button-group:first-child > label:first-child .dashicons {
+	-webkit-transform: rotate( -45deg );
 	transform: rotate( -45deg );
 }
 
@@ -1302,6 +1248,7 @@ div#custom-background-image img {
 }
 
 .background-position-control .button-group:first-child > label:last-child .dashicons {
+	-webkit-transform: rotate( 45deg );
 	transform: rotate( 45deg );
 }
 
@@ -1310,6 +1257,7 @@ div#custom-background-image img {
 }
 
 .background-position-control .button-group:last-child > label:first-child .dashicons {
+	-webkit-transform: rotate( 45deg );
 	transform: rotate( 45deg );
 }
 
@@ -1318,6 +1266,7 @@ div#custom-background-image img {
 }
 
 .background-position-control .button-group:last-child > label:last-child .dashicons {
+	-webkit-transform: rotate( -45deg );
 	transform: rotate( -45deg );
 }
 
@@ -1432,7 +1381,7 @@ body.full-overlay-active {
 	left: 0;
 	height: 45px;
 	padding: 0 15px;
-	line-height: 3.2;
+	line-height: 45px;
 	z-index: 10;
 	margin: 0;
 	border-top: none;
@@ -1472,6 +1421,7 @@ body.full-overlay-active {
 	float: right;
 	width: 45px;
 	height: 45px;
+	padding-left: 2px;
 	background: #eee;
 	border-left: 1px solid #ddd;
 	color: #444;
@@ -1569,7 +1519,7 @@ body.full-overlay-active {
 .wp-full-overlay .collapse-sidebar-label {
 	display: inline-block;
 	vertical-align: middle;
-	line-height: 1.6;
+	line-height: 20px;
 }
 
 .wp-full-overlay .collapse-sidebar-arrow {
@@ -1582,9 +1532,9 @@ body.full-overlay-active {
 
 .wp-full-overlay .collapse-sidebar:hover .collapse-sidebar-arrow,
 .wp-full-overlay .collapse-sidebar:focus .collapse-sidebar-arrow {
-	box-shadow:
-		0 0 0 1px #5b9dd9,
-		0 0 2px 1px rgba(30, 140, 190, 0.8);
+    box-shadow:
+    	0 0 0 1px #5b9dd9,
+		0 0 2px 1px rgba(30, 140, 190, .8);
 }
 
 .wp-full-overlay .collapse-sidebar-label {
@@ -1600,7 +1550,7 @@ body.full-overlay-active {
 	content: "\f148";
 	background: #eee;
 	font: normal 20px/1 dashicons;
-	speak: never;
+	speak: none;
 	padding: 0;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -1613,10 +1563,12 @@ body.full-overlay-active {
 /* rtl:ignore */
 .wp-full-overlay.collapsed .collapse-sidebar-arrow:before,
 .rtl .wp-full-overlay .collapse-sidebar-arrow:before {
-	transform: rotate(180.001deg); /* Firefox: promoting to its own layer to trigger anti-aliasing */
+	-webkit-transform: rotate(180.001deg);
+	transform: rotate(180.001deg); /* Firefox: promoting to its own layer to trigger anti-aliasing  */
 }
 
 .rtl .wp-full-overlay.collapsed .collapse-sidebar-arrow:before {
+	-webkit-transform: none;
 	transform: none;
 }
 
@@ -1672,10 +1624,9 @@ body.full-overlay-active {
 	box-shadow: none;
 	border-top: 1px solid transparent;
 	border-bottom: 4px solid transparent;
-	transition:
-		.15s color ease-in-out,
-		.15s background-color ease-in-out,
-		.15s border-color ease-in-out;
+	transition: .15s color ease-in-out,
+	            .15s background-color ease-in-out,
+	            .15s border-color ease-in-out;
 }
 
 .wp-full-overlay-footer .devices button:focus {
@@ -1728,7 +1679,7 @@ body.full-overlay-active {
 	content: "\f470";
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width:1024px) {
 	.wp-full-overlay-footer .devices {
 		display: none;
 	}
@@ -1836,7 +1787,7 @@ body.full-overlay-active {
 
 .install-theme-info .theme-name {
 	font-size: 16px;
-	line-height: 1.5;
+	line-height: 24px;
 	margin-bottom: 0;
 	margin-top: 0;
 }
@@ -1858,13 +1809,15 @@ body.full-overlay-active {
 .theme-details .theme-description {
 	float: right;
 	color: #72777c;
-	line-height: 1.6;
+	line-height: 20px;
 	max-width: 100%;
 }
 
 .theme-install-overlay .wp-full-overlay-header .button {
 	float: left;
 	margin: 8px 0 0 10px;
+	/* For when .theme-install is a span rather than a.button-primary (already installed theme) */
+	line-height: 26px;
 }
 
 .theme-install-overlay .wp-full-overlay-sidebar {
@@ -1901,6 +1854,7 @@ body.full-overlay-active {
 	top: 50%;
 	z-index: -1;
 	margin: -10px -10px 0 0;
+	-webkit-transform: translateZ(0);
 	transform: translateZ(0);
 	background: transparent url(../images/spinner.gif) no-repeat center center;
 	background-size: 20px 20px;
@@ -1933,7 +1887,7 @@ body.full-overlay-active {
 	}
 }
 
-@media screen and (max-width: 782px) {
+@media screen and ( max-width: 782px ) {
 	.available-theme .action-links .delete-theme {
 		float: none;
 		margin: 0;
@@ -1949,10 +1903,9 @@ body.full-overlay-active {
 		width: 100%;
 	}
 
-	.theme-install-overlay .wp-full-overlay-header .button {
-		font-size: 13px;
-		line-height: 2.15384615;
-		min-height: 30px;
+	.theme-install-overlay .wp-full-overlay-header .theme-install {
+		margin-top: 6px;
+		line-height: normal;
 	}
 
 	.theme-browser .theme .theme-actions .button {
@@ -1961,13 +1914,8 @@ body.full-overlay-active {
 
 	.theme-browser .theme.active .theme-actions,
 	.theme-browser .theme .theme-actions {
-		padding-top: 4px;
-		padding-bottom: 4px;
-	}
-
-	.upload-theme .wp-upload-form,
-	.upload-plugin .wp-upload-form {
-		display: block;
+		padding-top: 8px;
+		padding-bottom: 8px;
 	}
 }
 
@@ -1976,6 +1924,6 @@ body.full-overlay-active {
 	.theme-info .updating-message:before,
 	.theme-info .updated-message:before,
 	.theme-install.updating-message:before {
-		speak: never;
+		speak: none;
 	}
 }

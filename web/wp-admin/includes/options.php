@@ -13,7 +13,7 @@
  * @since 4.2.0
  */
 function options_discussion_add_js() {
-	?>
+?>
 	<script>
 	(function($){
 		var parent = $( '#show_avatars' ),
@@ -23,7 +23,7 @@ function options_discussion_add_js() {
 		});
 	})(jQuery);
 	</script>
-	<?php
+<?php
 }
 
 /**
@@ -32,7 +32,7 @@ function options_discussion_add_js() {
  * @since 3.5.0
  */
 function options_general_add_js() {
-	?>
+?>
 <script type="text/javascript">
 	jQuery(document).ready(function($){
 		var $siteName = $( '#wp-admin-bar-site-name' ).children( 'a' ).first(),
@@ -49,44 +49,34 @@ function options_general_add_js() {
 			$siteName.text( title );
 		});
 
-		$( 'input[name="date_format"]' ).click( function() {
-			if ( 'date_format_custom_radio' !== $(this).attr( 'id' ) )
+		$("input[name='date_format']").click(function(){
+			if ( "date_format_custom_radio" != $(this).attr("id") )
 				$( 'input[name="date_format_custom"]' ).val( $( this ).val() ).closest( 'fieldset' ).find( '.example' ).text( $( this ).parent( 'label' ).children( '.format-i18n' ).text() );
 		});
-
 		$( 'input[name="date_format_custom"]' ).on( 'click input', function() {
 			$( '#date_format_custom_radio' ).prop( 'checked', true );
 		});
 
-		$( 'input[name="time_format"]' ).click( function() {
-			if ( 'time_format_custom_radio' !== $(this).attr( 'id' ) )
+		$("input[name='time_format']").click(function(){
+			if ( "time_format_custom_radio" != $(this).attr("id") )
 				$( 'input[name="time_format_custom"]' ).val( $( this ).val() ).closest( 'fieldset' ).find( '.example' ).text( $( this ).parent( 'label' ).children( '.format-i18n' ).text() );
 		});
-
 		$( 'input[name="time_format_custom"]' ).on( 'click input', function() {
 			$( '#time_format_custom_radio' ).prop( 'checked', true );
 		});
-
-		$( 'input[name="date_format_custom"], input[name="time_format_custom"]' ).on( 'input', function() {
+		$("input[name='date_format_custom'], input[name='time_format_custom']").change( function() {
 			var format = $( this ),
 				fieldset = format.closest( 'fieldset' ),
 				example = fieldset.find( '.example' ),
 				spinner = fieldset.find( '.spinner' );
 
-			// Debounce the event callback while users are typing.
-			clearTimeout( $.data( this, 'timer' ) );
-			$( this ).data( 'timer', setTimeout( function() {
-				// If custom date is not empty.
-				if ( format.val() ) {
-					spinner.addClass( 'is-active' );
+			spinner.addClass( 'is-active' );
 
-					$.post( ajaxurl, {
-						action: 'date_format_custom' === format.attr( 'name' ) ? 'date_format' : 'time_format',
-						date 	: format.val()
-					}, function( d ) { spinner.removeClass( 'is-active' ); example.text( d ); } );
-				}
-			}, 500 ) );
-		} );
+			$.post( ajaxurl, {
+					action: 'date_format_custom' == format.attr( 'name' ) ? 'date_format' : 'time_format',
+					date : format.val()
+				}, function( d ) { spinner.removeClass( 'is-active' ); example.text( d ); } );
+		});
 
 		var languageSelect = $( '#WPLANG' );
 		$( 'form' ).submit( function() {
@@ -98,7 +88,7 @@ function options_general_add_js() {
 		});
 	});
 </script>
-	<?php
+<?php
 }
 
 /**
@@ -107,7 +97,7 @@ function options_general_add_js() {
  * @since 3.5.0
  */
 function options_reading_add_js() {
-	?>
+?>
 <script type="text/javascript">
 	jQuery(document).ready(function($){
 		var section = $('#front-static-pages'),
@@ -117,10 +107,10 @@ function options_reading_add_js() {
 				selects.prop( 'disabled', ! staticPage.prop('checked') );
 			};
 		check_disabled();
-		section.find( 'input:radio' ).change( check_disabled );
+ 		section.find('input:radio').change(check_disabled);
 	});
 </script>
-	<?php
+<?php
 }
 
 /**
@@ -130,5 +120,5 @@ function options_reading_add_js() {
  */
 function options_reading_blog_charset() {
 	echo '<input name="blog_charset" type="text" id="blog_charset" value="' . esc_attr( get_option( 'blog_charset' ) ) . '" class="regular-text" />';
-	echo '<p class="description">' . __( 'The <a href="https://wordpress.org/support/article/glossary/#character-set">character encoding</a> of your site (UTF-8 is recommended)' ) . '</p>';
+	echo '<p class="description">' . __( 'The <a href="https://codex.wordpress.org/Glossary#Character_set">character encoding</a> of your site (UTF-8 is recommended)' ) . '</p>';
 }

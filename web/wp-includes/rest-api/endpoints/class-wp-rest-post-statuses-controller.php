@@ -35,41 +35,33 @@ class WP_REST_Post_Statuses_Controller extends WP_REST_Controller {
 	 */
 	public function register_routes() {
 
-		register_rest_route(
-			$this->namespace,
-			'/' . $this->rest_base,
+		register_rest_route( $this->namespace, '/' . $this->rest_base, array(
 			array(
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
-					'args'                => $this->get_collection_params(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
-		);
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'get_items' ),
+				'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				'args'                => $this->get_collection_params(),
+			),
+			'schema' => array( $this, 'get_public_item_schema' ),
+		) );
 
-		register_rest_route(
-			$this->namespace,
-			'/' . $this->rest_base . '/(?P<status>[\w-]+)',
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<status>[\w-]+)', array(
+			'args' => array(
+				'status' => array(
+					'description' => __( 'An alphanumeric identifier for the status.' ),
+					'type'        => 'string',
+				),
+			),
 			array(
-				'args'   => array(
-					'status' => array(
-						'description' => __( 'An alphanumeric identifier for the status.' ),
-						'type'        => 'string',
-					),
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'get_item' ),
+				'permission_callback' => array( $this, 'get_item_permissions_check' ),
+				'args'                => array(
+					'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 				),
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'get_item_permissions_check' ),
-					'args'                => array(
-						'context' => $this->get_context_param( array( 'default' => 'view' ) ),
-					),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
-		);
+			),
+			'schema' => array( $this, 'get_public_item_schema' ),
+		) );
 	}
 
 	/**
@@ -78,7 +70,7 @@ class WP_REST_Post_Statuses_Controller extends WP_REST_Controller {
 	 * @since 4.7.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
-	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @return WP_Error|bool True if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( 'edit' === $request['context'] ) {
@@ -89,12 +81,7 @@ class WP_REST_Post_Statuses_Controller extends WP_REST_Controller {
 					return true;
 				}
 			}
-
-			return new WP_Error(
-				'rest_cannot_view',
-				__( 'Sorry, you are not allowed to manage post statuses.' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+			return new WP_Error( 'rest_cannot_view', __( 'Sorry, you are not allowed to edit posts in this post type.' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
 		return true;
@@ -106,11 +93,11 @@ class WP_REST_Post_Statuses_Controller extends WP_REST_Controller {
 	 * @since 4.7.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
-		$data              = array();
-		$statuses          = get_post_stati( array( 'internal' => false ), 'object' );
+		$data = array();
+		$statuses = get_post_stati( array( 'internal' => false ), 'object' );
 		$statuses['trash'] = get_post_status_object( 'trash' );
 
 		foreach ( $statuses as $slug => $obj ) {
@@ -120,7 +107,7 @@ class WP_REST_Post_Statuses_Controller extends WP_REST_Controller {
 				continue;
 			}
 
-			$status             = $this->prepare_item_for_response( $obj, $request );
+			$status = $this->prepare_item_for_response( $obj, $request );
 			$data[ $obj->name ] = $this->prepare_response_for_collection( $status );
 		}
 
@@ -133,27 +120,19 @@ class WP_REST_Post_Statuses_Controller extends WP_REST_Controller {
 	 * @since 4.7.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
-	 * @return true|WP_Error True if the request has read access for the item, WP_Error object otherwise.
+	 * @return WP_Error|bool True if the request has read access for the item, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
 		$status = get_post_status_object( $request['status'] );
 
 		if ( empty( $status ) ) {
-			return new WP_Error(
-				'rest_status_invalid',
-				__( 'Invalid status.' ),
-				array( 'status' => 404 )
-			);
+			return new WP_Error( 'rest_status_invalid', __( 'Invalid status.' ), array( 'status' => 404 ) );
 		}
 
 		$check = $this->check_read_permission( $status );
 
 		if ( ! $check ) {
-			return new WP_Error(
-				'rest_cannot_read_status',
-				__( 'Cannot view status.' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+			return new WP_Error( 'rest_cannot_read_status', __( 'Cannot view status.' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
 		return true;
@@ -191,17 +170,13 @@ class WP_REST_Post_Statuses_Controller extends WP_REST_Controller {
 	 * @since 4.7.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
 		$obj = get_post_status_object( $request['status'] );
 
 		if ( empty( $obj ) ) {
-			return new WP_Error(
-				'rest_status_invalid',
-				__( 'Invalid status.' ),
-				array( 'status' => 404 )
-			);
+			return new WP_Error( 'rest_status_invalid', __( 'Invalid status.' ), array( 'status' => 404 ) );
 		}
 
 		$data = $this->prepare_item_for_response( $obj, $request );
@@ -251,13 +226,9 @@ class WP_REST_Post_Statuses_Controller extends WP_REST_Controller {
 			$data['slug'] = $status->name;
 		}
 
-		if ( in_array( 'date_floating', $fields, true ) ) {
-			$data['date_floating'] = $status->date_floating;
-		}
-
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
-		$data    = $this->add_additional_fields_to_object( $data, $request );
-		$data    = $this->filter_response_by_context( $data, $context );
+		$data = $this->add_additional_fields_to_object( $data, $request );
+		$data = $this->filter_response_by_context( $data, $context );
 
 		$response = rest_ensure_response( $data );
 
@@ -289,69 +260,57 @@ class WP_REST_Post_Statuses_Controller extends WP_REST_Controller {
 	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
-		if ( $this->schema ) {
-			return $this->add_additional_fields_schema( $this->schema );
-		}
-
 		$schema = array(
-			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => 'status',
-			'type'       => 'object',
-			'properties' => array(
-				'name'          => array(
-					'description' => __( 'The title for the status.' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'readonly'    => true,
+			'$schema'              => 'http://json-schema.org/draft-04/schema#',
+			'title'                => 'status',
+			'type'                 => 'object',
+			'properties'           => array(
+				'name'             => array(
+					'description'  => __( 'The title for the status.' ),
+					'type'         => 'string',
+					'context'      => array( 'embed', 'view', 'edit' ),
+					'readonly'     => true,
 				),
-				'private'       => array(
-					'description' => __( 'Whether posts with this status should be private.' ),
-					'type'        => 'boolean',
-					'context'     => array( 'edit' ),
-					'readonly'    => true,
+				'private'          => array(
+					'description'  => __( 'Whether posts with this status should be private.' ),
+					'type'         => 'boolean',
+					'context'      => array( 'edit' ),
+					'readonly'     => true,
 				),
-				'protected'     => array(
-					'description' => __( 'Whether posts with this status should be protected.' ),
-					'type'        => 'boolean',
-					'context'     => array( 'edit' ),
-					'readonly'    => true,
+				'protected'        => array(
+					'description'  => __( 'Whether posts with this status should be protected.' ),
+					'type'         => 'boolean',
+					'context'      => array( 'edit' ),
+					'readonly'     => true,
 				),
-				'public'        => array(
-					'description' => __( 'Whether posts of this status should be shown in the front end of the site.' ),
-					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
+				'public'           => array(
+					'description'  => __( 'Whether posts of this status should be shown in the front end of the site.' ),
+					'type'         => 'boolean',
+					'context'      => array( 'view', 'edit' ),
+					'readonly'     => true,
 				),
-				'queryable'     => array(
-					'description' => __( 'Whether posts with this status should be publicly-queryable.' ),
-					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
+				'queryable'        => array(
+					'description'  => __( 'Whether posts with this status should be publicly-queryable.' ),
+					'type'         => 'boolean',
+					'context'      => array( 'view', 'edit' ),
+					'readonly'     => true,
 				),
-				'show_in_list'  => array(
-					'description' => __( 'Whether to include posts in the edit listing for their post type.' ),
-					'type'        => 'boolean',
-					'context'     => array( 'edit' ),
-					'readonly'    => true,
+				'show_in_list'     => array(
+					'description'  => __( 'Whether to include posts in the edit listing for their post type.' ),
+					'type'         => 'boolean',
+					'context'      => array( 'edit' ),
+					'readonly'     => true,
 				),
-				'slug'          => array(
-					'description' => __( 'An alphanumeric identifier for the status.' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'date_floating' => array(
-					'description' => __( 'Whether posts of this status may have floating published dates.' ),
-					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
+				'slug'             => array(
+					'description'  => __( 'An alphanumeric identifier for the status.' ),
+					'type'         => 'string',
+					'context'      => array( 'embed', 'view', 'edit' ),
+					'readonly'     => true,
 				),
 			),
 		);
 
-		$this->schema = $schema;
-
-		return $this->add_additional_fields_schema( $this->schema );
+		return $this->add_additional_fields_schema( $schema );
 	}
 
 	/**

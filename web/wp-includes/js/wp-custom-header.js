@@ -1,7 +1,3 @@
-/**
- * @output wp-includes/js/wp-custom-header.js
- */
-
 /* global YT */
 (function( window, settings ) {
 
@@ -50,7 +46,7 @@
 
 	CustomHeader.prototype = {
 		/**
-		 * Initialize the custom header.
+		 * Initalize the custom header.
 		 *
 		 * If the environment supports video, loops through registered handlers
 		 * until one is found that can handle the video.
@@ -79,7 +75,7 @@
 		 * @return {boolean}
 		 */
 		supportsVideo: function() {
-			// Don't load video on small screens. @todo Consider bandwidth and other factors.
+			// Don't load video on small screens. @todo: consider bandwidth and other factors.
 			if ( window.innerWidth < settings.minWidth || window.innerHeight < settings.minHeight ) {
 				return false;
 			}
@@ -108,7 +104,7 @@
 		/**
 		 * Initialize the video handler.
 		 *
-		 * @param {Object} settings Video settings.
+		 * @param {object} settings Video settings.
 		 */
 		initialize: function( settings ) {
 			var handler = this,
@@ -217,7 +213,7 @@
 		 * Whether the handler can process a video.
 		 *
 		 * @abstract
-		 * @param {Object} settings Video settings.
+		 * @param {object} settings Video settings.
 		 * @return {boolean}
 		 */
 		test: function() {
@@ -239,7 +235,7 @@
 	 *
 	 * @memberOf wp
 	 *
-	 * @param {Object} protoProps Properties to apply to the prototype.
+	 * @param {object} protoProps Properties to apply to the prototype.
 	 * @return CustomHandler The subclass.
 	 */
 	BaseHandler.extend = function( protoProps ) {
@@ -271,7 +267,7 @@
 		/**
 		 * Whether the native handler supports a video.
 		 *
-		 * @param {Object} settings Video settings.
+		 * @param {object} settings Video settings.
 		 * @return {boolean}
 		 */
 		test: function( settings ) {
@@ -345,7 +341,7 @@
 		/**
 		 * Whether the handler supports a video.
 		 *
-		 * @param {Object} settings Video settings.
+		 * @param {object} settings Video settings.
 		 * @return {boolean}
 		 */
 		test: function( settings ) {

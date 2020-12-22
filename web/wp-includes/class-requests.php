@@ -88,7 +88,7 @@ class Requests {
 	 *
 	 * @var string
 	 */
-	const VERSION = '1.7-3470169';
+	const VERSION = '1.7';
 
 	/**
 	 * Registered transport classes
@@ -187,8 +187,7 @@ class Requests {
 
 		// Don't search for a transport if it's already been done for these $capabilities
 		if (isset(self::$transport[$cap_string]) && self::$transport[$cap_string] !== null) {
-			$class = self::$transport[$cap_string];
-			return new $class();
+			return new self::$transport[$cap_string]();
 		}
 		// @codeCoverageIgnoreEnd
 
@@ -215,8 +214,7 @@ class Requests {
 			throw new Requests_Exception('No working transports found', 'notransport', self::$transports);
 		}
 
-		$class = self::$transport[$cap_string];
-		return new $class();
+		return new self::$transport[$cap_string]();
 	}
 
 	/**#@+
@@ -791,7 +789,7 @@ class Requests {
 	 * Convert a key => value array to a 'key: value' array for headers
 	 *
 	 * @param array $array Dictionary of header values
-	 * @return string[] List of headers
+	 * @return array List of headers
 	 */
 	public static function flatten($array) {
 		$return = array();
@@ -807,7 +805,7 @@ class Requests {
 	 * @codeCoverageIgnore
 	 * @deprecated Misspelling of {@see Requests::flatten}
 	 * @param array $array Dictionary of header values
-	 * @return string[] List of headers
+	 * @return array List of headers
 	 */
 	public static function flattern($array) {
 		return self::flatten($array);

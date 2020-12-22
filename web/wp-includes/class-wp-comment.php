@@ -17,20 +17,16 @@ final class WP_Comment {
 	/**
 	 * Comment ID.
 	 *
-	 * A numeric string, for compatibility reasons.
-	 *
 	 * @since 4.4.0
-	 * @var string
+	 * @var int
 	 */
 	public $comment_ID;
 
 	/**
 	 * ID of the post the comment is associated with.
 	 *
-	 * A numeric string, for compatibility reasons.
-	 *
 	 * @since 4.4.0
-	 * @var string
+	 * @var int
 	 */
 	public $comment_post_ID = 0;
 
@@ -93,10 +89,8 @@ final class WP_Comment {
 	/**
 	 * Comment karma count.
 	 *
-	 * A numeric string, for compatibility reasons.
-	 *
 	 * @since 4.4.0
-	 * @var string
+	 * @var int
 	 */
 	public $comment_karma = 0;
 
@@ -120,28 +114,23 @@ final class WP_Comment {
 	 * Comment type.
 	 *
 	 * @since 4.4.0
-	 * @since 5.5.0 Default value changed to `comment`.
 	 * @var string
 	 */
-	public $comment_type = 'comment';
+	public $comment_type = '';
 
 	/**
 	 * Parent comment ID.
 	 *
-	 * A numeric string, for compatibility reasons.
-	 *
 	 * @since 4.4.0
-	 * @var string
+	 * @var int
 	 */
 	public $comment_parent = 0;
 
 	/**
 	 * Comment author ID.
 	 *
-	 * A numeric string, for compatibility reasons.
-	 *
 	 * @since 4.4.0
-	 * @var string
+	 * @var int
 	 */
 	public $user_id = 0;
 
@@ -173,6 +162,7 @@ final class WP_Comment {
 	 * Retrieves a WP_Comment instance.
 	 *
 	 * @since 4.4.0
+	 * @static
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
@@ -262,17 +252,17 @@ final class WP_Comment {
 	 *                                 `$meta_query`. Also accepts false, an empty array, or
 	 *                                 'none' to disable `ORDER BY` clause.
 	 * }
-	 * @return WP_Comment[] Array of `WP_Comment` objects.
+	 * @return array Array of `WP_Comment` objects.
 	 */
 	public function get_children( $args = array() ) {
 		$defaults = array(
-			'format'       => 'tree',
-			'status'       => 'all',
+			'format' => 'tree',
+			'status' => 'all',
 			'hierarchical' => 'threaded',
-			'orderby'      => '',
+			'orderby' => '',
 		);
 
-		$_args           = wp_parse_args( $args, $defaults );
+		$_args = wp_parse_args( $args, $defaults );
 		$_args['parent'] = $this->comment_ID;
 
 		if ( is_null( $this->children ) ) {
@@ -286,7 +276,7 @@ final class WP_Comment {
 		if ( 'flat' === $_args['format'] ) {
 			$children = array();
 			foreach ( $this->children as $child ) {
-				$child_args           = $_args;
+				$child_args = $_args;
 				$child_args['format'] = 'flat';
 				// get_children() resets this value automatically.
 				unset( $child_args['parent'] );
@@ -354,7 +344,7 @@ final class WP_Comment {
 	 * @return bool
 	 */
 	public function __isset( $name ) {
-		if ( in_array( $name, $this->post_fields, true ) && 0 !== (int) $this->comment_post_ID ) {
+		if ( in_array( $name, $this->post_fields ) && 0 !== (int) $this->comment_post_ID ) {
 			$post = get_post( $this->comment_post_ID );
 			return property_exists( $post, $name );
 		}
@@ -371,7 +361,7 @@ final class WP_Comment {
 	 * @return mixed
 	 */
 	public function __get( $name ) {
-		if ( in_array( $name, $this->post_fields, true ) ) {
+		if ( in_array( $name, $this->post_fields ) ) {
 			$post = get_post( $this->comment_post_ID );
 			return $post->$name;
 		}

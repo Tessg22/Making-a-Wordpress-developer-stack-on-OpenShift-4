@@ -1,21 +1,21 @@
+/* global ajaxurl, attachMediaBoxL10n, _wpMediaGridSettings, showNotice */
+
 /**
- * Creates a dialog containing posts that can have a particular media attached
- * to it.
+ * @summary Creates a dialog containing posts that can have a particular media attached to it.
  *
  * @since 2.7.0
- * @output wp-admin/js/media.js
  *
- * @namespace findPosts
+ * @global
+ * @namespace
  *
  * @requires jQuery
  */
-
-/* global ajaxurl, _wpMediaGridSettings, showNotice, findPosts */
+var findPosts;
 
 ( function( $ ){
-	window.findPosts = {
+	findPosts = {
 		/**
-		 * Opens a dialog to attach media to a post.
+		 * @summary Opens a dialog to attach media to a post.
 		 *
 		 * Adds an overlay prior to retrieving a list of posts to attach the media to.
 		 *
@@ -26,7 +26,7 @@
 		 * @param {string} af_name The name of the affected element.
 		 * @param {string} af_val The value of the affected post element.
 		 *
-		 * @return {boolean} Always returns false.
+		 * @returns {boolean} Always returns false.
 		 */
 		open: function( af_name, af_val ) {
 			var overlay = $( '.ui-find-overlay' );
@@ -59,13 +59,13 @@
 		},
 
 		/**
-		 * Clears the found posts lists before hiding the attach media dialog.
+		 * @summary Clears the found posts lists before hiding the attach media dialog.
 		 *
 		 * @since 2.7.0
 		 *
 		 * @memberOf findPosts
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		close: function() {
 			$('#find-posts-response').empty();
@@ -74,14 +74,13 @@
 		},
 
 		/**
-		 * Binds a click event listener to the overlay which closes the attach media
-		 * dialog.
+		 * @summary Binds a click event listener to the overlay which closes the attach media dialog.
 		 *
 		 * @since 3.5.0
 		 *
 		 * @memberOf findPosts
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		overlay: function() {
 			$( '.ui-find-overlay' ).on( 'click', function () {
@@ -90,17 +89,16 @@
 		},
 
 		/**
-		 * Retrieves and displays posts based on the search term.
+		 * @summary Retrieves and displays posts based on the search term.
 		 *
-		 * Sends a post request to the admin_ajax.php, requesting posts based on the
-		 * search term provided by the user. Defaults to all posts if no search term is
-		 * provided.
+		 * Sends a post request to the admin_ajax.php, requesting posts based on the search term provided by the user.
+		 * Defaults to all posts if no search term is provided.
 		 *
 		 * @since 2.7.0
 		 *
 		 * @memberOf findPosts
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		send: function() {
 			var post = {
@@ -113,8 +111,8 @@
 			spinner.addClass( 'is-active' );
 
 			/**
-			 * Send a POST request to admin_ajax.php, hide the spinner and replace the list
-			 * of posts with the response data. If an error occurs, display it.
+			 * Send a POST request to admin_ajax.php, hide the spinner and replace the list of posts with the response data.
+			 * If an error occurs, display it.
 			 */
 			$.ajax( ajaxurl, {
 				type: 'POST',
@@ -124,21 +122,20 @@
 				spinner.removeClass( 'is-active' );
 			}).done( function( x ) {
 				if ( ! x.success ) {
-					$( '#find-posts-response' ).text( wp.i18n.__( 'An error has occurred. Please reload the page and try again.' ) );
+					$( '#find-posts-response' ).text( attachMediaBoxL10n.error );
 				}
 
 				$( '#find-posts-response' ).html( x.data );
 			}).fail( function() {
-				$( '#find-posts-response' ).text( wp.i18n.__( 'An error has occurred. Please reload the page and try again.' ) );
+				$( '#find-posts-response' ).text( attachMediaBoxL10n.error );
 			});
 		}
 	};
 
 	/**
-	 * Initializes the file once the DOM is fully loaded and attaches events to the
-	 * various form elements.
+	 * @summary Initializes the file once the DOM is fully loaded and attaches events to the various form elements.
 	 *
-	 * @return {void}
+	 * @returns {void}
 	 */
 	$( document ).ready( function() {
 		var settings, $mediaGridWrap = $( '#wp-media-grid' );
@@ -147,14 +144,11 @@
 		if ( $mediaGridWrap.length && window.wp && window.wp.media ) {
 			settings = _wpMediaGridSettings;
 
-			var frame = window.wp.media({
+			window.wp.media({
 				frame: 'manage',
 				container: $mediaGridWrap,
 				library: settings.queryVars
 			}).open();
-
-			// Fire a global ready event.
-			$mediaGridWrap.trigger( 'wp-media-grid-ready', frame );
 		}
 
 		// Prevents form submission if no post has been selected.
@@ -199,9 +193,9 @@
 		});
 
 		/**
-		 * Enables clicking on the entire table row.
+		 * @summary Enables clicking on the entire table row.
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		$( '.find-box-inside' ).on( 'click', 'tr', function() {
 			$( this ).find( '.found-radio input' ).prop( 'checked', true );

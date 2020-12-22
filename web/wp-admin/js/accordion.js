@@ -25,8 +25,7 @@
  *
  * Note that any appropriate tags may be used, as long as the above classes are present.
  *
- * @since 3.6.0
- * @output wp-admin/js/accordion.js
+ * @since 3.6.0.
  */
 
 ( function( $ ){
@@ -35,11 +34,11 @@
 
 		// Expand/Collapse accordion sections on click.
 		$( '.accordion-container' ).on( 'click keydown', '.accordion-section-title', function( e ) {
-			if ( e.type === 'keydown' && 13 !== e.which ) { // "Return" key.
+			if ( e.type === 'keydown' && 13 !== e.which ) { // "return" key
 				return;
 			}
 
-			e.preventDefault(); // Keep this AFTER the key filter above.
+			e.preventDefault(); // Keep this AFTER the key filter above
 
 			accordionSwitch( $( this ) );
 		});
@@ -80,7 +79,7 @@
 			section.toggleClass( 'open' );
 		}
 
-		// We have to wait for the animations to finish.
+		// We have to wait for the animations to finish
 		setTimeout(function(){
 		    container.removeClass( 'opening' );
 		}, 150);

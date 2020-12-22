@@ -1,7 +1,3 @@
-/**
- * @output wp-admin/js/editor-expand.js
- */
-
 ( function( window, $, undefined ) {
 	'use strict';
 
@@ -11,11 +7,11 @@
 		$footer = $( '#wpfooter' );
 
 	/**
-	 * Handles the resizing of the editor.
+	 * @summary Handles the resizing of the editor.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @return {void}
+	 * @returns {void}
 	 */
 	$( function() {
 		var $wrap = $( '#postdivrich' ),
@@ -64,13 +60,14 @@
 			};
 
 		/**
-		 * Resizes textarea based on scroll height and width.
+		 * @summary Resizes textarea based on scroll height and width.
 		 *
-		 * Doesn't shrink the editor size below the 300px auto resize minimum height.
+		 * Resizes textarea based on scroll height and width. Doesn't shrink the
+		 * editor size below the 300px auto resize minimum height.
 		 *
 		 * @since 4.6.1
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		var shrinkTextarea = window._.throttle( function() {
 			var x = window.scrollX || document.documentElement.scrollLeft;
@@ -93,7 +90,7 @@
 		}, 300 );
 
 		/**
-		 * Resizes the text editor depending on the old text length.
+		 * @summary Resizes the text editor depending on the old text length.
 		 *
 		 * If there is an mceEditor and it is hidden, it resizes the editor depending
 		 * on the old text length. If the current length of the text is smaller than
@@ -102,7 +99,7 @@
 		 *
 		 * @since 4.6.1
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function textEditorResize() {
 			var length = textEditor.value.length;
@@ -126,7 +123,7 @@
 		}
 
 		/**
-		 * Gets the height and widths of elements.
+		 * @summary Gets the height and widths of elements.
 		 *
 		 * Gets the heights of the window, the adminbar, the tools, the menu,
 		 * the visualTop, the textTop, the bottom, the statusbar and sideSortables
@@ -135,7 +132,7 @@
 		 *
 		 * @since 4.0.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function getHeights() {
 			var windowWidth = $window.width();
@@ -161,23 +158,23 @@
 
 		// We need to wait for TinyMCE to initialize.
 		/**
-		 * Binds all necessary functions for editor expand to the editor when the editor
-		 * is initialized.
+		 * @summary Binds all necessary functions for editor expand to the editor
+		 * when the editor is initialized.
 		 *
 		 * @since 4.0.0
 		 *
 		 * @param {event} event The TinyMCE editor init event.
 		 * @param {object} editor The editor to bind the vents on.
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		$document.on( 'tinymce-editor-init.editor-expand', function( event, editor ) {
 			// VK contains the type of key pressed. VK = virtual keyboard.
 			var VK = window.tinymce.util.VK,
 				/**
-				 * Hides any float panel with a hover state. Additionally hides tooltips.
+				 * @summary Hides any float panel with a hover state. Additionally hides tooltips.
 				 *
-				 * @return {void}
+				 * @returns {void}
 				 */
 				hideFloatPanels = _.debounce( function() {
 					! $( '.mce-floatpanel:hover' ).length && window.tinymce.ui.FloatPanel.hideAll();
@@ -202,9 +199,9 @@
 			$menuBar = $contentWrap.find( '.mce-menubar' );
 
 			/**
-			 * Gets the offset of the editor.
+			 * @summary Gets the offset of the editor.
 			 *
-			 * @return {number|boolean} Returns the offset of the editor
+			 * @returns {Number|Boolean} Returns the offset of the editor
 			 * or false if there is no offset height.
 			 */
 			function mceGetCursorOffset() {
@@ -235,22 +232,21 @@
 			}
 
 			/**
-			 * Filters the special keys that should not be used for scrolling.
+			 * @summary Filters the special keys that should not be used for scrolling.
 			 *
 			 * @since 4.0.0
 			 *
 			 * @param {event} event The event to get the key code from.
 			 *
-			 * @return {void}
+			 * @returns {void}
 			 */
 			function mceKeyup( event ) {
 				var key = event.keyCode;
 
-				// Bail on special keys. Key code 47 is a '/'.
+				// Bail on special keys. Key code 47 is a /
 				if ( key <= 47 && ! ( key === VK.SPACEBAR || key === VK.ENTER || key === VK.DELETE || key === VK.BACKSPACE || key === VK.UP || key === VK.LEFT || key === VK.DOWN || key === VK.UP ) ) {
 					return;
-				// OS keys, function keys, num lock, scroll lock. Key code 91-93 are OS keys.
-				// Key code 112-123 are F1 to F12. Key code 144 is num lock. Key code 145 is scroll lock.
+				// OS keys, function keys, num lock, scroll lock. Key code 91-93 are OS keys. Key code 112-123 are F1 to F12. Key code 144 is num lock. Key code 145 is scroll lock.
 				} else if ( ( key >= 91 && key <= 93 ) || ( key >= 112 && key <= 123 ) || key === 144 || key === 145 ) {
 					return;
 				}
@@ -259,7 +255,7 @@
 			}
 
 			/**
-			 * Makes sure the cursor is always visible in the editor.
+			 * @summary Makes sure the cursor is always visible in the editor.
 			 *
 			 * Makes sure the cursor is kept between the toolbars of the editor and scrolls
 			 * the window when the cursor moves out of the viewport to a wpview.
@@ -271,7 +267,7 @@
 			 *
 			 * @param {string} key The key code of the pressed key.
 			 *
-			 * @return {void}
+			 * @returns {void}
 			 */
 			function mceScroll( key ) {
 				var offset = mceGetCursorOffset(),
@@ -326,13 +322,13 @@
 			}
 
 			/**
-			 * If the editor is fullscreen, calls adjust.
+			 * @summary If the editor is fullscreen, calls adjust.
 			 *
 			 * @since 4.1.0
 			 *
 			 * @param {event} event The FullscreenStateChanged event.
 			 *
-			 * @return {void}
+			 * @returns {void}
 			 */
 			function mceFullscreenToggled( event ) {
 				// event.state is true if the editor is fullscreen.
@@ -342,14 +338,14 @@
 			}
 
 			/**
-			 * Shows the editor when scrolled.
+			 * @summary Shows the editor when scrolled.
 			 *
 			 * Binds the hideFloatPanels function on the window scroll.mce-float-panels event.
 			 * Executes the wpAutoResize on the active editor.
 			 *
 			 * @since 4.0.0
 			 *
-			 * @return {void}
+			 * @returns {void}
 			 */
 			function mceShow() {
 				$window.on( 'scroll.mce-float-panels', hideFloatPanels );
@@ -361,14 +357,14 @@
 			}
 
 			/**
-			 * Resizes the editor.
+			 * @summary Resizes the editor.
 			 *
 			 * Removes all functions from the window scroll.mce-float-panels event.
 			 * Resizes the text editor and scrolls to a position based on the pageXOffset and adminBarHeight.
 			 *
 			 * @since 4.0.0
 			 *
-			 * @return {void}
+			 * @returns {void}
 			 */
 			function mceHide() {
 				$window.off( 'scroll.mce-float-panels' );
@@ -388,22 +384,22 @@
 			}
 
 			/**
-			 * Toggles advanced states.
+			 * @summary Toggles advanced states.
 			 *
 			 * @since 4.1.0
 			 *
-			 * @return {void}
+			 * @returns {void}
 			 */
 			function toggleAdvanced() {
 				advanced = ! advanced;
 			}
 
 			/**
-			 * Binds events of the editor and window.
+			 * @summary Binds events of the editor and window.
 			 *
 			 * @since 4.0.0
 			 *
-			 * @return {void}
+			 * @returns {void}
 			 */
 			mceBind = function() {
 				editor.on( 'keyup', mceKeyup );
@@ -424,11 +420,11 @@
 			};
 
 			/**
-			 * Unbinds the events of the editor and window.
+			 * @summary Unbinds the events of the editor and window.
 			 *
 			 * @since 4.0.0
 			 *
-			 * @return {void}
+			 * @returns {void}
 			 */
 			mceUnbind = function() {
 				editor.off( 'keyup', mceKeyup );
@@ -451,17 +447,16 @@
 		} );
 
 		/**
-		 * Adjusts the toolbars heights and positions.
+		 * @summary Adjusts the toolbars heights and positions.
 		 *
-		 * Adjusts the toolbars heights and positions based on the scroll position on
-		 * the page, the active editor mode and the heights of the editor, admin bar and
-		 * side bar.
+		 * Adjusts the toolbar heights and positions based on the scroll position on the page,
+		 * the active editor mode and the heights of the editor, admin bar and side bar.
 		 *
 		 * @since 4.0.0
 		 *
 		 * @param {event} event The event that calls this function.
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function adjust( event ) {
 
@@ -504,7 +499,7 @@
 				topHeight = heights.textTopHeight;
 			}
 
-			// Return if TinyMCE is still initializing.
+			// Return if TinyMCE is still intializing.
 			if ( ! visual && ! $top.length ) {
 				return;
 			}
@@ -517,7 +512,7 @@
 			 * If in visual mode, checks if the editorHeight is greater than the autoresizeMinHeight + topHeight.
 			 * If not in visual mode, checks if the editorHeight is greater than the autoresizeMinHeight + 20.
 			 */
-			canPin = visual ? autoresizeMinHeight + topHeight : autoresizeMinHeight + 20; // 20px from textarea padding.
+			canPin = visual ? autoresizeMinHeight + topHeight : autoresizeMinHeight + 20; // 20px from textarea padding
 			canPin = editorHeight > ( canPin + 5 );
 
 			if ( ! canPin ) {
@@ -769,11 +764,11 @@
 		}
 
 		/**
-		 * Resizes the editor and adjusts the toolbars.
+		 * @summary Resizes the editor and adjusts the toolbars.
 		 *
 		 * @since 4.0.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function fullscreenHide() {
 			textEditorResize();
@@ -781,13 +776,13 @@
 		}
 
 		/**
-		 * Runs the passed function with 500ms intervals.
+		 * @summary Runs the passed function with 500ms intervals.
 		 *
 		 * @since 4.0.0
 		 *
 		 * @param {function} callback The function to run in the timeout.
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function initialResize( callback ) {
 			for ( var i = 1; i < 6; i++ ) {
@@ -796,11 +791,11 @@
 		}
 
 		/**
-		 * Runs adjust after 100ms.
+		 * @summary Runs adjust after 100ms.
 		 *
 		 * @since 4.0.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function afterScroll() {
 			clearTimeout( scrollTimer );
@@ -808,11 +803,11 @@
 		}
 
 		/**
-		 * Binds editor expand events on elements.
+		 * @summary Binds editor expand events on elements.
 		 *
 		 * @since 4.0.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function on() {
 			/*
@@ -878,11 +873,11 @@
 		}
 
 		/**
-		 * Unbinds editor expand events.
+		 * @summary Unbinds editor expand events.
 		 *
 		 * @since 4.0.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function off() {
 			var height = parseInt( window.getUserSetting( 'ed_size', 300 ), 10 );
@@ -911,7 +906,7 @@
 			// Adjust when entering or exiting fullscreen mode.
 			fullscreen && fullscreen.pubsub.unsubscribe( 'hidden', fullscreenHide );
 
-			// Reset all CSS.
+			// Reset all css
 			$.each( [ $visualTop, $textTop, $tools, $menuBar, $bottom, $statusBar, $contentWrap, $visualEditor, $textEditor, $sideSortables ], function( i, element ) {
 				element && element.attr( 'style', '' );
 			});
@@ -972,11 +967,11 @@
 	} );
 
 	/**
-	 * Handles the distraction free writing of TinyMCE.
+	 * @summary Handles the distraction free writing of TinyMCE.
 	 *
 	 * @since 4.1.0
 	 *
-	 * @return {void}
+	 * @returns {void}
 	 */
 	$( function() {
 		var $body = $( document.body ),
@@ -1022,11 +1017,11 @@
 		} );
 
 		/**
-		 * Recalculates the bottom and right position of the editor in the DOM.
+		 * @summary Recalculates the bottom and right position of the editor in the DOM.
 		 *
 		 * @since 4.1.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function recalcEditorRect() {
 			editorRect = $editor.offset();
@@ -1035,11 +1030,11 @@
 		}
 
 		/**
-		 * Activates the distraction free writing mode.
+		 * @summary Activates the distraction free writing mode.
 		 *
 		 * @since 4.1.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function activate() {
 			if ( ! _isActive ) {
@@ -1051,11 +1046,11 @@
 		}
 
 		/**
-		 * Deactivates the distraction free writing mode.
+		 * @summary Deactivates the distraction free writing mode.
 		 *
 		 * @since 4.1.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function deactivate() {
 			if ( _isActive ) {
@@ -1069,22 +1064,22 @@
 		}
 
 		/**
-		 * Returns _isActive.
+		 * @summary Returns _isActive.
 		 *
 		 * @since 4.1.0
 		 *
-		 * @return {boolean} Returns true is _isActive is true.
+		 * @returns {boolean} Returns true is _isActive is true.
 		 */
 		function isActive() {
 			return _isActive;
 		}
 
 		/**
-		 * Binds events on the editor for distraction free writing.
+		 * @summary Binds events on the editor for distraction free writing.
 		 *
 		 * @since 4.1.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function on() {
 			if ( ! _isOn && _isActive ) {
@@ -1103,11 +1098,11 @@
 		}
 
 		/**
-		 * Unbinds events on the editor for distraction free writing.
+		 * @summary Unbinds events on the editor for distraction free writing.
 		 *
 		 * @since 4.1.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function off() {
 			if ( _isOn ) {
@@ -1126,11 +1121,11 @@
 		}
 
 		/**
-		 * Binds or unbinds the editor expand events.
+		 * @summary Binds or unbinds the editor expand events.
 		 *
 		 * @since 4.1.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function toggle() {
 			if ( _isOn ) {
@@ -1141,18 +1136,18 @@
 		}
 
 		/**
-		 * Returns the value of _isOn.
+		 * @summary Returns the value of _isOn.
 		 *
 		 * @since 4.1.0
 		 *
-		 * @return {boolean} Returns true if _isOn is true.
+		 * @returns {boolean} Returns true if _isOn is true.
 		 */
 		function isOn() {
 			return _isOn;
 		}
 
 		/**
-		 * Fades out all elements except for the editor.
+		 * @summary Fades out all elements except for the editor.
 		 *
 		 * The fading is done based on key presses and mouse movements.
 		 * Also calls the fadeIn on certain key presses
@@ -1162,7 +1157,7 @@
 		 *
 		 * @param event The event that triggers this function.
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function fadeOut( event ) {
 			var isMac,
@@ -1180,15 +1175,15 @@
 
 			// Return if any of the following keys or combinations of keys is pressed.
 			if ( event && ( event.metaKey || ( event.ctrlKey && ! event.altKey ) || ( event.altKey && event.shiftKey ) || ( key && (
-				// Special keys ( tab, ctrl, alt, esc, arrow keys... ).
+				// Special keys ( tab, ctrl, alt, esc, arrow keys... )
 				( key <= 47 && key !== 8 && key !== 13 && key !== 32 && key !== 46 ) ||
-				// Windows keys.
+				// Windows keys
 				( key >= 91 && key <= 93 ) ||
-				// F keys.
+				// F keys
 				( key >= 112 && key <= 135 ) ||
-				// Num Lock, Scroll Lock, OEM.
+				// Num Lock, Scroll Lock, OEM
 				( key >= 144 && key <= 150 ) ||
-				// OEM or non-printable.
+				// OEM or non-printable
 				key >= 224
 			) ) ) ) {
 				return;
@@ -1295,13 +1290,13 @@
 		}
 
 		/**
-		 * Fades all elements back in.
+		 * @summary Fades all elements back in.
 		 *
 		 * @since 4.1.0
 		 *
 		 * @param event The event that triggers this function.
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function fadeIn( event ) {
 			if ( faded ) {
@@ -1343,11 +1338,11 @@
 		}
 
 		/**
-		 * Fades in if the focused element based on it position.
+		 * @summary Fades in if the focused element based on it position.
 		 *
 		 * @since 4.1.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function maybeFadeIn() {
 			setTimeout( function() {
@@ -1365,11 +1360,11 @@
 		}
 
 		/**
-		 * Fades out the admin bar based on focus on the admin bar.
+		 * @summary Fades out the admin bar based on focus on the admin bar.
 		 *
 		 * @since 4.1.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function fadeOutAdminBar() {
 			if ( ! fadedAdminBar && faded ) {
@@ -1386,11 +1381,11 @@
 		}
 
 		/**
-		 * Fades in the admin bar.
+		 * @summary Fades in the admin bar.
 		 *
 		 * @since 4.1.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function fadeInAdminBar() {
 			if ( fadedAdminBar ) {
@@ -1401,11 +1396,11 @@
 		}
 
 		/**
-		 * Fades out the edit slug box.
+		 * @summary Fades out the edit slug box.
 		 *
 		 * @since 4.1.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function fadeOutSlug() {
 			if ( ! fadedSlug && faded && ! $slug.find( ':focus').length ) {
@@ -1418,11 +1413,11 @@
 		}
 
 		/**
-		 * Fades in the edit slug box.
+		 * @summary Fades in the edit slug box.
 		 *
 		 * @since 4.1.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function fadeInSlug() {
 			if ( fadedSlug ) {
@@ -1435,7 +1430,7 @@
 		}
 
 		/**
-		 * Triggers the toggle on Alt + Shift + W.
+		 * @summary Triggers the toggle on Alt + Shift + W.
 		 *
 		 * Keycode 87 = w.
 		 *
@@ -1443,7 +1438,7 @@
 		 *
 		 * @param {event} event The event to trigger the toggle.
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function toggleViaKeyboard( event ) {
 			if ( event.altKey && event.shiftKey && 87 === event.keyCode ) {
@@ -1456,14 +1451,14 @@
 		}
 
 		/**
-		 * Adds the distraction free writing button when setting up TinyMCE.
+		 * @summary Adds the distraction free writing button when setting up TinyMCE.
 		 *
 		 * @since 4.1.0
 		 *
 		 * @param {event} event The TinyMCE editor setup event.
 		 * @param {object} editor The editor to add the button to.
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		$document.on( 'tinymce-editor-setup.focus', function( event, editor ) {
 			editor.addButton( 'dfw', {
@@ -1474,20 +1469,12 @@
 				onPostRender: function() {
 					var button = this;
 
-					editor.on( 'init', function() {
-						if ( button.disabled() ) {
-							button.hide();
-						}
-					} );
-
 					$document
 					.on( 'dfw-activate.focus', function() {
 						button.disabled( false );
-						button.show();
 					} )
 					.on( 'dfw-deactivate.focus', function() {
 						button.disabled( true );
-						button.hide();
 					} )
 					.on( 'dfw-on.focus', function() {
 						button.active( true );
@@ -1505,14 +1492,14 @@
 		} );
 
 		/**
-		 * Binds and unbinds events on the editor.
+		 * @summary Binds and unbinds events on the editor.
 		 *
 		 * @since 4.1.0
 		 *
 		 * @param {event} event The TinyMCE editor init event.
 		 * @param {object} editor The editor to bind events on.
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		$document.on( 'tinymce-editor-init.focus', function( event, editor ) {
 			var mceBind, mceUnbind;
@@ -1562,14 +1549,14 @@
 		} );
 
 		/**
-		 *  Binds events on quicktags init.
+		 * @summary  Binds events on quicktags init.
 		 *
 		 * @since 4.1.0
 		 *
 		 * @param {event} event The quicktags init event.
 		 * @param {object} editor The editor to bind events on.
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		$document.on( 'quicktags-init', function( event, editor ) {
 			var $button;

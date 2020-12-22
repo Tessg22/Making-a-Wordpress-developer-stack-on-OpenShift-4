@@ -12,11 +12,9 @@
 		 * Ensures media elements that have already been initialized won't be
 		 * processed again.
 		 *
-		 * @memberOf wp.mediaelement
-		 *
 		 * @since 4.4.0
 		 *
-		 * @return {void}
+		 * @returns {void}
 		 */
 		function initialize() {
 			if ( typeof _wpmejsSettings !== 'undefined' ) {
@@ -54,12 +52,12 @@
 			 *
 			 * @param {object} media The wrapper that mimics all the native events/properties/methods for all renderers.
 			 * @param {object} node  The original HTML video, audio, or iframe tag where the media was loaded.
-			 * @return {string}
+			 * @returns {string}
 			 */
 			settings.customError = function ( media, node ) {
 				// Make sure we only fall back to a download link for flash files.
 				if ( -1 !== media.rendererName.indexOf( 'flash' ) || -1 !== media.rendererName.indexOf( 'flv' ) ) {
-					return '<a href="' + node.src + '">' + mejsL10n.strings['mejs.download-file'] + '</a>';
+					return '<a href="' + node.src + '">' + mejsL10n.strings['mejs.download-video'] + '</a>';
 				}
 			};
 
@@ -77,10 +75,6 @@
 		};
 	}
 
-	/**
-	 * @namespace wp.mediaelement
-	 * @memberOf wp
-	 */
 	window.wp.mediaelement = new wpMediaElement();
 
 	$( window.wp.mediaelement.initialize );

@@ -94,7 +94,6 @@ class MagpieRSS {
 		}
 
 		xml_parser_free( $this->parser );
-		unset( $this->parser );
 
 		$this->normalize();
 	}
@@ -386,6 +385,10 @@ class MagpieRSS {
 	}
 
 	function error( $errormsg, $lvl = E_USER_WARNING ) {
+		// append PHP's error message if track_errors enabled
+		if ( isset($php_errormsg) ) {
+			$errormsg .= " ($php_errormsg)";
+		}
 		if ( MAGPIE_DEBUG ) {
 			trigger_error( $errormsg, $lvl);
 		} else {
@@ -818,6 +821,10 @@ class RSSCache {
 	Purpose:	register error
 \*=======================================================================*/
 	function error ($errormsg, $lvl=E_USER_WARNING) {
+		// append PHP's error message if track_errors enabled
+		if ( isset($php_errormsg) ) {
+			$errormsg .= " ($php_errormsg)";
+		}
 		$this->ERROR = $errormsg;
 		if ( MAGPIE_DEBUG ) {
 			trigger_error( $errormsg, $lvl);

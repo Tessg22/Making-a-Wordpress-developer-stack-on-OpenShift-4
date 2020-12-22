@@ -41,17 +41,14 @@ class WP_Customize_Color_Control extends WP_Customize_Control {
 	 * Constructor.
 	 *
 	 * @since 3.4.0
-	 *
-	 * @see WP_Customize_Control::__construct()
+	 * @uses WP_Customize_Control::__construct()
 	 *
 	 * @param WP_Customize_Manager $manager Customizer bootstrap instance.
 	 * @param string               $id      Control ID.
 	 * @param array                $args    Optional. Arguments to override class property defaults.
-	 *                                      See WP_Customize_Control::__construct() for information
-	 *                                      on accepted arguments. Default empty array.
 	 */
 	public function __construct( $manager, $id, $args = array() ) {
-		$this->statuses = array( '' => __( 'Default' ) );
+		$this->statuses = array( '' => __('Default') );
 		parent::__construct( $manager, $id, $args );
 	}
 
@@ -73,9 +70,9 @@ class WP_Customize_Color_Control extends WP_Customize_Control {
 	 */
 	public function to_json() {
 		parent::to_json();
-		$this->json['statuses']     = $this->statuses;
+		$this->json['statuses'] = $this->statuses;
 		$this->json['defaultValue'] = $this->setting->default;
-		$this->json['mode']         = $this->mode;
+		$this->json['mode'] = $this->mode;
 	}
 
 	/**
@@ -114,7 +111,7 @@ class WP_Customize_Color_Control extends WP_Customize_Control {
 				<input class="color-picker-hue" type="text" data-type="hue" />
 			<# } else { #>
 				<input class="color-picker-hex" type="text" maxlength="7" placeholder="{{ defaultValue }}" {{ defaultValueAttr }} />
-			<# } #>
+ 			<# } #>
 			</label>
 		</div>
 		<?php

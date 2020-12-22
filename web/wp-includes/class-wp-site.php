@@ -145,6 +145,7 @@ final class WP_Site {
 	/**
 	 * Retrieves a site from the database by its ID.
 	 *
+	 * @static
 	 * @since 4.5.0
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
@@ -162,18 +163,14 @@ final class WP_Site {
 
 		$_site = wp_cache_get( $site_id, 'sites' );
 
-		if ( false === $_site ) {
+		if ( ! $_site ) {
 			$_site = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->blogs} WHERE blog_id = %d LIMIT 1", $site_id ) );
 
 			if ( empty( $_site ) || is_wp_error( $_site ) ) {
-				$_site = -1;
+				return false;
 			}
 
 			wp_cache_add( $site_id, $_site, 'sites' );
-		}
-
-		if ( is_numeric( $_site ) ) {
-			return false;
 		}
 
 		return new WP_Site( $_site );
@@ -190,7 +187,7 @@ final class WP_Site {
 	 * @param WP_Site|object $site A site object.
 	 */
 	public function __construct( $site ) {
-		foreach ( get_object_vars( $site ) as $key => $value ) {
+		foreach( get_object_vars( $site ) as $key => $value ) {
 			$this->$key = $value;
 		}
 	}
@@ -319,7 +316,7 @@ final class WP_Site {
 		if ( false === $details ) {
 
 			switch_to_blog( $this->blog_id );
-			// Create a raw copy of the object for backward compatibility with the filter below.
+			// Create a raw copy of the object for backwards compatibility with the filter below.
 			$details = new stdClass();
 			foreach ( get_object_vars( $this ) as $key => $value ) {
 				$details->$key = $value;
