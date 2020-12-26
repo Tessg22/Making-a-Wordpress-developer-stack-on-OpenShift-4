@@ -1,0 +1,596 @@
+apiVersion: v1
+kind: Template
+message: |-
+  The following service(s) have been created in your project: Wordpress, Nginx, MariaDB and Phpmyadmin.
+
+  For more information about using this template, including OpenShift considerations, see https://gitlab.cee.redhat.com/tgabriel/research.redhat.com/blob/master/README.md.
+metadata:
+  creationTimestamp: null
+  name: wordpress-nginx-php
+  annotations:
+    description: An example PHP 7.1 application running on Ubuntu with a MySQL database, built for Wordpress. For more information
+      about using this template, including OpenShift considerations, see https://gitlab.cee.redhat.com/tgabriel/research.redhat.com/blob/master/README.md..
+    iconClass: icon-wordpress
+    openshift.io/display-name: Wordpress + Nginx
+    openshift.io/documentation-url: https://gitlab.cee.redhat.com/tgabriel/research.redhat.com/blob/master/README.md
+    openshift.io/long-description: This template defines resources needed to develop a Debian based Wordpress setup running on PHP 7.1 using FPM and Nginx. It also includes resources required to create a MariaDB instance and Phpmyadmin.
+    openshift.io/provider-display-name: Tereza Gabrielova
+    tags: quickstart,php,wordpress,nginx
+    template.openshift.io/bindable: "false"
+labels:
+  template: wordpress-nginx
+  app: ${NAME}
+objects:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${NAME}
+    name: ${NAME}
+  spec:
+    ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: ${NAME}
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${NAME}
+    name: ${NAME}-db
+  spec:
+    ports:
+    - name: mariadb
+      port: 3306
+      protocol: TCP
+      targetPort: 3306
+    selector:
+      app: ${NAME}
+      name: ${NAME}-db
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: phpmyadmin
+      app.kubernetes.io/component: phpmyadmin
+      app.kubernetes.io/instance: phpmyadmin
+      app.kubernetes.io/part-of: phpmyadmin-app
+      app.openshift.io/runtime-version: latest
+    name: phpmyadmin
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: phpmyadmin
+      deploymentconfig: phpmyadmin
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: ${NAME}
+    name: ${NAME}
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      app: ${NAME}
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: ${NAME}
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: ${NAME}-db-secret
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: ${NAME}-db-secret
+          - name: MYSQL_HOST
+            value: ${NAME}-db
+          - name: MYSQL_PORT
+            value: "3306"
+          - name: MYSQL_DATABASE
+            value: ${MYSQL_DATABASE}
+          - name: OPENSHIFT_BUILD_NAME
+            value: "1"
+          image: tgabriel/wordpress@sha256:720aebef05828256e25be9e4bf5d03b7308898ebcff5f75288347df3a77c3e00
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - |
+                  cp -fr /code/. /app; rm -rfv /shared/*; rm -rf /app/web; cp -fr /code/web /app/web;
+          name: php-fpm
+          resources:
+            limits:
+              cpu: ${APP_CPU_LIMIT}
+              memory: ${APP_MEMORY_LIMIT}
+            requests:
+              cpu: ${APP_CPU_REQUEST}
+              memory: ${APP_MEMORY_REQUEST}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /app
+            name: app
+          - mountPath: /shared
+            name: ${NAME}-files
+        - image: tgabriel/nginx-openshift@sha256:83eb61c61612cd603765fcae13ce427ceec9bcb1fcb59f157b511e73ba71436b
+          imagePullPolicy: IfNotPresent
+          name: nginx
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          resources:
+            limits:
+              cpu: ${APP_CPU_LIMIT}
+              memory: ${APP_MEMORY_LIMIT}
+            requests:
+              cpu: ${APP_CPU_REQUEST}
+              memory: ${APP_MEMORY_REQUEST}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /app
+            name: app
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: app
+        - name: ${NAME}-files
+          persistentVolumeClaim:
+            claimName: ${NAME}-files
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - php-fpm
+        from:
+          kind: ImageStreamTag
+          name: ${NAME}:latest
+          namespace: ${NAMESPACE}
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - nginx
+        from:
+          kind: ImageStreamTag
+          name: nginx-openshift:latest
+          namespace: ${NAMESPACE}
+      type: ImageChange
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: ${NAME}
+    name: ${NAME}-db
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      app: ${NAME}
+      name: ${NAME}-db
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      resources:
+        limits:
+          cpu: ${DB_CPU_LIMIT}
+          memory: ${DB_MEMORY_LIMIT}
+        requests:
+          cpu: ${DB_CPU_REQUEST}
+          memory: ${DB_MEMORY_REQUEST}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: ${NAME}
+          name: ${NAME}-db
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: ${NAME}-db-secret
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: ${NAME}
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-root-password
+                name: ${NAME}
+          - name: MYSQL_DATABASE
+            value: ${NAME}
+          image: image-registry.openshift-image-registry.svc:5000/openshift/mariadb@sha256:513f7db527608c6c96b3659220ffc0397bdd30ff6617dad1790a90e14ac4f3b0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 3306
+            timeoutSeconds: 1
+          name: mariadb
+          ports:
+          - containerPort: 3306
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - MYSQL_PWD="$MYSQL_PASSWORD" mysql -h 127.0.0.1 -u $MYSQL_USER -D $MYSQL_DATABASE
+                -e 'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 200m
+              memory: 1Gi
+            requests:
+              cpu: 200m
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/mysql/data
+            name: ${NAME}-db-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: ${NAME}-db-data
+          persistentVolumeClaim:
+            claimName: ${NAME}-db
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - mariadb
+        from:
+          kind: ImageStreamTag
+          name: mariadb:latest
+          namespace: openshift
+        lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/openshift/mariadb@sha256:513f7db527608c6c96b3659220ffc0397bdd30ff6617dad1790a90e14ac4f3b0
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: phpmyadmin
+      app.kubernetes.io/component: phpmyadmin
+      app.kubernetes.io/instance: phpmyadmin
+      app.kubernetes.io/part-of: phpmyadmin-app
+      app.openshift.io/runtime: mysql-database
+    name: phpmyadmin
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      app: phpmyadmin
+      deploymentconfig: phpmyadmin
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: phpmyadmin
+          deploymentconfig: phpmyadmin
+      spec:
+        containers:
+        - env:
+          - name: PMA_ARBITRARY
+            value: "1"
+          - name: BLOWFISH_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: blowfish_secret
+                name: phpmyadmin
+          image: kicm/openshift-phpmyadmin
+          imagePullPolicy: IfNotPresent
+          name: phpmyadmin
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - phpmyadmin
+        from:
+          kind: ImageStreamTag
+          name: phpmyadmin:latest
+          namespace: ${NAMESPACE}
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: nginx-openshift
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: tgabriel/nginx-openshift:1.24
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: Source
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: phpmyadmin
+      app.kubernetes.io/component: phpmyadmin
+      app.kubernetes.io/instance: phpmyadmin
+      app.kubernetes.io/part-of: phpmyadmin-app
+    name: phpmyadmin
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - from:
+        kind: DockerImage
+        name: kicm/openshift-phpmyadmin
+      generation: 2
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: Source
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: ${NAME}
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: tgabriel/wordpress-openshift:1.0
+      generation: 1
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: Source
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    labels:
+      app: wordpress
+    name: wordpress
+  spec:
+    host: ${NAME}-${NAMESPACE}.${ROUTER_CANONICAL_HOSTNAME}
+    port:
+      targetPort: http
+    to:
+      kind: Service
+      name: wordpress
+      weight: 100
+    wildcardPolicy: None
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    labels:
+      app: phpmyadmin
+      app.kubernetes.io/component: phpmyadmin
+      app.kubernetes.io/instance: phpmyadmin
+      app.kubernetes.io/part-of: phpmyadmin-app
+      app.openshift.io/runtime-version: latest
+    name: phpmyadmin
+  spec:
+    host: phpmyadmin-${NAMESPACE}.${ROUTER_CANONICAL_HOSTNAME}
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: phpmyadmin
+      weight: 100
+    wildcardPolicy: None
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: wordpress-files
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${FILES_VOLUME_CAPACITY}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: wordpress-db
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${DB_VOLUME_CAPACITY}
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: wordpress-db-secret
+  stringData:
+    database-user: wordpress
+    database-password: eSoiDenThicO
+    database-root-password: nKatIcTRIToR
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: phpmyadmin
+  stringData:
+    blowfish_secret: 3/qwdRro5m{UCOYA_M-t*pwEH!E->Mqj
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: wordpress
+  stringData:
+    database-user: wordpress
+    database-password: eSoiDenThicO
+    database-root-password: nKatIcTRIToR
+parameters:
+- description: The name assigned to all of the frontend objects defined in this template.
+  displayName: Name
+  name: NAME
+  required: true
+  from: 'wordpress-[a-f0-9]{6}'
+  generate: expression
+- description: The OpenShift Namespace where the ImageStream resides.
+  displayName: Namespace
+  name: NAMESPACE
+  required: true
+- description: Maximum amount of memory limits the App container can use.
+  displayName: Memory Limit
+  name: APP_MEMORY_LIMIT
+  required: true
+  value: 512Mi
+- description: Maximum amount of cpu limits the App container can use.
+  displayName: CPU Limit
+  name: APP_CPU_LIMIT
+  required: true
+  value: 200m
+- description: Maximum amount of memory requests the App container can use.
+  displayName: Memory Request
+  name: APP_MEMORY_REQUEST
+  required: true
+  value: 512Mi
+- description: Maximum amount of cpu requests the App container can use.
+  displayName: CPU Request
+  name: APP_CPU_REQUEST
+  required: true
+  value: 200m
+- description: Maximum amount of memory limits the MariaDB container can use.
+  displayName: Memory Limit (MySQL)
+  name: DB_MEMORY_LIMIT
+  required: true
+  value: 512Mi
+- description: Maximum amount of cpu limits the MariaDB container can use.
+  displayName: CPU Limit (MySQL)
+  name: DB_CPU_LIMIT
+  required: true
+  value: 200m
+- description: Maximum amount of memory requests the MariaDB container can use.
+  displayName: Memory Request (MySQL)
+  name: DB_MEMORY_REQUEST
+  required: true
+  value: 512Mi
+- description: Maximum amount of cpu requests the MariaDB container can use.
+  displayName: CPU Request (MySQL)
+  name: DB_CPU_REQUEST
+  required: true
+  value: 200m  
+- description: Volume space available for DB data, e.g. 512Mi, 2Gi
+  displayName: Volume Capacity
+  name: DB_VOLUME_CAPACITY
+  required: true
+  value: 1Gi
+- description: Volume space available for sites/default/files, e.g. 512Mi, 2Gi
+  displayName: Files Volume Capacity
+  name: FILES_VOLUME_CAPACITY
+  required: true
+  value: 1Gi
+- description: Clusters Router Canonical Hostname is self explanatory.
+  displayName: Router Canonical Hostname 
+  name: ROUTER_CANONICAL_HOSTNAME
+- displayName: Database Name
+  name: MYSQL_DATABASE
+  required: true
+  value: wordpress
+- displayName: Database User
+  name: MYSQL_USER
+  required: true
+  value: wordpress
+- name: MYSQL_ROOT_PASSWORD
+  displayName: MySQL root user Password
+  description: Password for the MySQL root user.
+  generate: expression
+  from: "[a-zA-Z0-9]{16}"
+- displayName: Database Password
+  from: '[a-zA-Z0-9]{16}'
+  generate: expression
+  name: MYSQL_PASSWORD
