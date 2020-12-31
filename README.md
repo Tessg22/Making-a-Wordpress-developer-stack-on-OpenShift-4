@@ -25,3 +25,6 @@ $ oc edit bc/wordpress
 * Creates 2 containers (nginx and php-fpm) per each pod. Deploys Phpmyadmin and Mariadb.
 * Creates Routes for Wordpress and Phpmyadmin applications.
 * Creates Tekton resources (Pipeline, 2x Tasks, 2x PipelineResources, PipelineRun, TriggerTemplate, TriggerBinding, Trigger and EventListener).
+
+## Acknowledgment
+I would like to acknowledge Lakshmi Narasimhan for creating set of articles https://www.shapeblock.com/enhancing-the-developer-experience-on-openshift/ on which this guide is based.
