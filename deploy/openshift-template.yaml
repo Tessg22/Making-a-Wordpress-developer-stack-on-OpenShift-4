@@ -661,7 +661,7 @@ spec:
         privileged: true
     - name: php-testing
       workingDir: /workspace/source
-      command: ['phpunit', '--bootstrap', '/workspace/source/src/autoload.php', '/workspace/source/tests/EmailTest.php']
+      command: ['phpunit', '--bootstrap', '/workspace/source/web/wp-content/themes/twentyseventeen/autoload.php', '/workspace/source/tests/EmailTest.php']
       image: jakzal/phpqa:latest
       volumeMounts:
       - mountPath: /gen-source
