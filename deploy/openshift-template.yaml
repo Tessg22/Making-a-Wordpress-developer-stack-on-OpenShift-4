@@ -515,27 +515,27 @@ objects:
     database-password: eSoiDenThicO
     database-root-password: nKatIcTRIToR
 - apiVersion: build.openshift.io/v1
-kind: BuildConfig
-metadata:
-  labels:
-    app: wordpress
-  name: wordpress
-spec:
-  failedBuildsHistoryLimit: 5
-  output:
-    to:
-      kind: ImageStreamTag
-      name: wordpress:latest
-  runPolicy: Serial
-  source:
-    git:
-      uri: https://github.com/Tessg22/making-a-wordpress-developer-stack-on-openshift-4/
-    type: Git
-  strategy:
-    dockerStrategy:
-      dockerfilePath: deploy/Dockerfile
-    type: Docker
-  successfulBuildsHistoryLimit: 5
+  kind: BuildConfig
+  metadata:
+    labels:
+      app: wordpress
+    name: wordpress
+  spec:
+    failedBuildsHistoryLimit: 5
+    output:
+      to:
+        kind: ImageStreamTag
+        name: wordpress:latest
+    runPolicy: Serial
+    source:
+      git:
+        uri: https://github.com/Tessg22/making-a-wordpress-developer-stack-on-openshift-4/
+      type: Git
+    strategy:
+      dockerStrategy:
+        dockerfilePath: deploy/Dockerfile
+      type: Docker
+    successfulBuildsHistoryLimit: 5
 - apiVersion: tekton.dev/v1beta1
   kind: Pipeline
   metadata:
