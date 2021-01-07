@@ -1,19 +1,12 @@
 apiVersion: v1
 kind: Template
-message: |-
-  The following service(s) have been created in your project: Wordpress, Nginx, MariaDB and Phpmyadmin.
-
-  For more information about using this template, including OpenShift considerations, see https://gitlab.cee.redhat.com/tgabriel/research.redhat.com/blob/master/README.md.
 metadata:
-  creationTimestamp: null
   name: wordpress-nginx-php
   annotations:
-    description: An example PHP 7.1 application running on Ubuntu with a MySQL database, built for Wordpress. For more information
-      about using this template, including OpenShift considerations, see https://gitlab.cee.redhat.com/tgabriel/research.redhat.com/blob/master/README.md..
+    description: This template defines and creates resources for Wordpress installation which is running on Nginx and using MariaDB database. Version of PHP-FPM is 7.1.
     iconClass: icon-wordpress
     openshift.io/display-name: Wordpress + Nginx
-    openshift.io/documentation-url: https://gitlab.cee.redhat.com/tgabriel/research.redhat.com/blob/master/README.md
-    openshift.io/long-description: This template defines resources needed to develop a Debian based Wordpress setup running on PHP 7.1 using FPM and Nginx. It also includes resources required to create a MariaDB instance and Phpmyadmin.
+    openshift.io/documentation-url: https://github.com/Tessg22/making-a-wordpress-developer-stack-on-openshift-4/blob/master/README.md
     openshift.io/provider-display-name: Tereza Gabrielova
     tags: quickstart,php,wordpress,nginx
     template.openshift.io/bindable: "false"
